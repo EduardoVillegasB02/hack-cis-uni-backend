@@ -1,0 +1,71 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider  = "postgresql"
+  url       = env("DATABASE_URL")
+  directUrl = env("DIRECT_URL")
+}
+
+model Education {
+  id                    String          @id @default(uuid())
+  name                  String
+  initial               String?
+  users                 User[]
+}
+
+model Enrollment {
+  id                    String          @id @default(uuid())
+  team                  Team            @relation(fields: [team_id], references: [id])
+  team_id               String
+  user                  User            @relation(fields: [user_id], references: [id])
+  user_id               String
+}
+
+model Exterpise {
+  id                    String          @id @default(uuid())
+  name                  String
+  users                 User[]
+}
+
+model Project {
+  id                    String          @id @default(uuid())
+  name                  String
+  description_initial   String
+  description_final     String?
+  github                String?
+  video_pitch           String?
+  presentation          String?
+  demo                  String?
+  documentation         String?
+  teams                 Team[]
+}
+
+model Team {
+  id                    String          @id @default(uuid())
+  name                  String
+  project               Project         @relation(fields: [project_id], references: [id])
+  project_id            String
+  enrollments           Enrollment[]
+}
+
+model User {
+  id                    String          @id @default(uuid())
+  name                  String
+  lastname              String
+  email                 String
+  phone                 String
+  linkedin              String
+  github                String?
+  social                String?
+  background            String?
+  education             Education       @relation(fields: [education_id], references: [id])
+  education_id          String
+  exterpise             Exterpise       @relation(fields: [exterpise_id], references: [id])
+  exterpise_id          String
+  enrollments           Enrollment[]
+  createdAt             DateTime        @default(now())
+  updatedAt             DateTime        @updatedAt
+  deletedAt             DateTime?
+}
