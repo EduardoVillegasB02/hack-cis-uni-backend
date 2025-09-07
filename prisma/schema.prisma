@@ -10,9 +10,12 @@ datasource db {
 
 model Education {
   id                    String          @id @default(uuid())
-  name                  String
+  name                  String          @unique
   initial               String?
   users                 User[]
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+  deleted_at            DateTime?
 }
 
 model Enrollment {
@@ -21,12 +24,18 @@ model Enrollment {
   team_id               String
   user                  User            @relation(fields: [user_id], references: [id])
   user_id               String
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+  deleted_at            DateTime?
 }
 
 model Exterpise {
   id                    String          @id @default(uuid())
   name                  String
   users                 User[]
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+  deleted_at            DateTime?
 }
 
 model Project {
@@ -40,6 +49,9 @@ model Project {
   demo                  String?
   documentation         String?
   teams                 Team[]
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+  deleted_at            DateTime?
 }
 
 model Team {
@@ -48,6 +60,9 @@ model Team {
   project               Project         @relation(fields: [project_id], references: [id])
   project_id            String
   enrollments           Enrollment[]
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+  deleted_at            DateTime?
 }
 
 model User {
@@ -65,7 +80,7 @@ model User {
   exterpise             Exterpise       @relation(fields: [exterpise_id], references: [id])
   exterpise_id          String
   enrollments           Enrollment[]
-  createdAt             DateTime        @default(now())
-  updatedAt             DateTime        @updatedAt
-  deletedAt             DateTime?
+  created_at            DateTime        @default(now())
+  updated_at            DateTime        @updatedAt
+  deleted_at            DateTime?
 }

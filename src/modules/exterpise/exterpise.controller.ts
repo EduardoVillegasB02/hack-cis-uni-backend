@@ -1,4 +1,12 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  Post,
+  Body,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { ExterpiseService } from './exterpise.service';
 import { CreateExterpiseDto } from './dto/create-exterpise.dto';
 import { UpdateExterpiseDto } from './dto/update-exterpise.dto';
@@ -23,7 +31,10 @@ export class ExterpiseController {
   }
 
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateExterpiseDto: UpdateExterpiseDto) {
+  update(
+    @Param('id') id: string,
+    @Body() updateExterpiseDto: UpdateExterpiseDto,
+  ) {
     return this.exterpiseService.update(+id, updateExterpiseDto);
   }
 

@@ -3,6 +3,9 @@ CREATE TABLE "public"."Education" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "initial" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "Education_pkey" PRIMARY KEY ("id")
 );
@@ -12,6 +15,9 @@ CREATE TABLE "public"."Enrollment" (
     "id" TEXT NOT NULL,
     "team_id" TEXT NOT NULL,
     "user_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "Enrollment_pkey" PRIMARY KEY ("id")
 );
@@ -20,6 +26,9 @@ CREATE TABLE "public"."Enrollment" (
 CREATE TABLE "public"."Exterpise" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "Exterpise_pkey" PRIMARY KEY ("id")
 );
@@ -35,6 +44,9 @@ CREATE TABLE "public"."Project" (
     "presentation" TEXT,
     "demo" TEXT,
     "documentation" TEXT,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "Project_pkey" PRIMARY KEY ("id")
 );
@@ -44,6 +56,9 @@ CREATE TABLE "public"."Team" (
     "id" TEXT NOT NULL,
     "name" TEXT NOT NULL,
     "project_id" TEXT NOT NULL,
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "Team_pkey" PRIMARY KEY ("id")
 );
@@ -61,9 +76,9 @@ CREATE TABLE "public"."User" (
     "background" TEXT,
     "education_id" TEXT NOT NULL,
     "exterpise_id" TEXT NOT NULL,
-    "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
-    "updatedAt" TIMESTAMP(3) NOT NULL,
-    "deletedAt" TIMESTAMP(3),
+    "created_at" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
+    "updated_at" TIMESTAMP(3) NOT NULL,
+    "deleted_at" TIMESTAMP(3),
 
     CONSTRAINT "User_pkey" PRIMARY KEY ("id")
 );
