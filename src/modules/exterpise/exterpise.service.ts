@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateExterpiseDto } from './dto/create-exterpise.dto';
-import { UpdateExterpiseDto } from './dto/update-exterpise.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Exterpise } from '@prisma/client';
+import { CreateExterpiseDto, UpdateExterpiseDto } from './dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 
 @Injectable()
 export class ExterpiseService {
-  create(createExterpiseDto: CreateExterpiseDto) {
-    return 'This action adds a new exterpise';
+  constructor(private prisma: PrismaService) {}
+
+  async create(dto: CreateExterpiseDto): Promise<Exterpise> {
+    return await this.prisma.exterpise.create({ data: dto });
   }
 
-  findAll() {
-    return `This action returns all exterpise`;
+  async findAll(): Promise<Exterpise[]> {
+    return await this.prisma.exterpise.findMany({
+      where: { deleted_at: null },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} exterpise`;
+  async findOne(id: string): Promise<Exterpise> {
+    return await this.getExterpiseById(id);
   }
 
-  update(id: number, updateExterpiseDto: UpdateExterpiseDto) {
-    return `This action updates a #${id} exterpise`;
+  async update(id: string, dto: UpdateExterpiseDto): Promise<Exterpise> {
+    await this.getExterpiseById(id);
+    return this.prisma.exterpise.update({
+      data: dto,
+      where: { id },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} exterpise`;
+  async delete(id: string): Promise<Exterpise> {
+    await this.getExterpiseById(id);
+    return this.prisma.exterpise.update({
+      data: { deleted_at: new Date() },
+      where: { id },
+    });
+  }
+
+  private async getExterpiseById(id: string): Promise<Exterpise> {
+    const exterpise = await this.prisma.exterpise.findUnique({
+      where: { id },
+    });
+    if (!exterpise) throw new BadRequestException('Exterpise is not found');
+    if (exterpise.deleted_at)
+      throw new BadRequestException('Exterpise is deleted');
+    return exterpise;
   }
 }

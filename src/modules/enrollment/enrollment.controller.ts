@@ -1,23 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { EnrollmentService } from './enrollment.service';
-import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
-import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
+import { CreateEnrollmentDto, UpdateEnrollmentDto } from './dto';
 
-@Controller('enrollment')
+@Controller('Enrollment')
 export class EnrollmentController {
   constructor(private readonly enrollmentService: EnrollmentService) {}
 
   @Post()
-  create(@Body() createEnrollmentDto: CreateEnrollmentDto) {
-    return this.enrollmentService.create(createEnrollmentDto);
+  create(@Body() dto: CreateEnrollmentDto) {
+    return this.enrollmentService.create(dto);
   }
 
   @Get()
@@ -26,20 +26,20 @@ export class EnrollmentController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.enrollmentService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.enrollmentService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
-    @Body() updateEnrollmentDto: UpdateEnrollmentDto,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateEnrollmentDto,
   ) {
-    return this.enrollmentService.update(+id, updateEnrollmentDto);
+    return this.enrollmentService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.enrollmentService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.enrollmentService.delete(id);
   }
 }

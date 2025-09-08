@@ -1,23 +1,23 @@
 import {
-  Controller,
-  Get,
-  Post,
   Body,
-  Patch,
-  Param,
+  Controller,
   Delete,
+  Get,
+  Param,
+  ParseUUIDPipe,
+  Patch,
+  Post,
 } from '@nestjs/common';
 import { ExterpiseService } from './exterpise.service';
-import { CreateExterpiseDto } from './dto/create-exterpise.dto';
-import { UpdateExterpiseDto } from './dto/update-exterpise.dto';
+import { CreateExterpiseDto, UpdateExterpiseDto } from './dto';
 
 @Controller('exterpise')
 export class ExterpiseController {
   constructor(private readonly exterpiseService: ExterpiseService) {}
 
   @Post()
-  create(@Body() createExterpiseDto: CreateExterpiseDto) {
-    return this.exterpiseService.create(createExterpiseDto);
+  create(@Body() dto: CreateExterpiseDto) {
+    return this.exterpiseService.create(dto);
   }
 
   @Get()
@@ -26,20 +26,20 @@ export class ExterpiseController {
   }
 
   @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.exterpiseService.findOne(+id);
+  findOne(@Param('id', new ParseUUIDPipe()) id: string) {
+    return this.exterpiseService.findOne(id);
   }
 
   @Patch(':id')
   update(
-    @Param('id') id: string,
-    @Body() updateExterpiseDto: UpdateExterpiseDto,
+    @Param('id', new ParseUUIDPipe()) id: string,
+    @Body() dto: UpdateExterpiseDto,
   ) {
-    return this.exterpiseService.update(+id, updateExterpiseDto);
+    return this.exterpiseService.update(id, dto);
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string) {
-    return this.exterpiseService.remove(+id);
+  delete(@Param('id') id: string) {
+    return this.exterpiseService.delete(id);
   }
 }
