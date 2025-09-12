@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Team } from '@prisma/client';
 import { CreateTeamDto, UpdateTeamDto } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { SearchDto } from '../../common/dto';
 
 @Injectable()
 export class TeamService {
@@ -11,10 +12,26 @@ export class TeamService {
     return await this.prisma.team.create({ data: dto });
   }
 
-  async findAll(): Promise<Team[]> {
-    return await this.prisma.team.findMany({
-      where: { deleted_at: null },
+  async findAll(dto: SearchDto): Promise<any> {
+    const { search } = dto;
+    const where: any = { deleted_at: null };
+    if (search)
+      where.name = {
+        contains: search,
+        mode: 'insensitive',
+      };
+    const teams = await this.prisma.team.findMany({
+      select: {
+        id: true,
+        name: true,
+      },
+      where,
     });
+    return {
+      message: 'Lista de equipos',
+      success: true,
+      data: teams,
+    };
   }
 
   async findOne(id: string): Promise<Team> {
@@ -42,8 +59,7 @@ export class TeamService {
       where: { id },
     });
     if (!team) throw new BadRequestException('Team is not found');
-    if (team.deleted_at)
-      throw new BadRequestException('Team is deleted');
+    if (team.deleted_at) throw new BadRequestException('Team is deleted');
     return team;
   }
 }

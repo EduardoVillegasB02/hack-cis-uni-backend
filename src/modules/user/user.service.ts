@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { User } from '@prisma/client';
 import { CreateUserDto, UpdateUserDto } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class UserService {
@@ -42,8 +42,7 @@ export class UserService {
       where: { id },
     });
     if (!user) throw new BadRequestException('User is not found');
-    if (user.deleted_at)
-      throw new BadRequestException('User is deleted');
+    if (user.deleted_at) throw new BadRequestException('User is deleted');
     return user;
   }
 }

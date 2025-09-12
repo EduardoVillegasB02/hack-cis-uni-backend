@@ -1,4 +1,12 @@
-import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { Level } from '@prisma/client';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  IsUUID,
+} from 'class-validator';
 
 export class CreateUserDto {
   @IsString()
@@ -10,6 +18,10 @@ export class CreateUserDto {
   lastname: string;
 
   @IsString()
+  @IsOptional()
+  dni?: string | null;
+
+  @IsEmail()
   @IsNotEmpty()
   email: string;
 
@@ -17,21 +29,25 @@ export class CreateUserDto {
   @IsNotEmpty()
   phone: string;
 
+  @IsEnum(Level)
+  @IsNotEmpty()
+  level: Level;
+
   @IsString()
   @IsNotEmpty()
   linkedin: string;
 
   @IsString()
   @IsOptional()
-  github?: string;
+  github?: string | null;
 
   @IsString()
   @IsOptional()
-  social?: string;
+  social?: string | null;
 
   @IsString()
   @IsOptional()
-  background?: string;
+  background?: string | null;
 
   @IsUUID()
   @IsNotEmpty()
@@ -39,5 +55,5 @@ export class CreateUserDto {
 
   @IsUUID()
   @IsNotEmpty()
-  exterpise_id: string;  
+  expertise_id: string;
 }

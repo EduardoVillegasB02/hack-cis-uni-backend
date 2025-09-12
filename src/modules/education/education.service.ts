@@ -1,7 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Education } from '@prisma/client';
 import { CreateEducationDto, UpdateEducationDto } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
+import { SearchDto } from '../../common/dto';
 
 @Injectable()
 export class EducationService {
@@ -11,10 +12,27 @@ export class EducationService {
     return await this.prisma.education.create({ data: dto });
   }
 
-  async findAll(): Promise<Education[]> {
-    return await this.prisma.education.findMany({
-      where: { deleted_at: null },
+  async findAll(dto: SearchDto): Promise<any> {
+    const { search } = dto;
+    const where: any = { deleted_at: null };
+    if (search)
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { initial: { contains: search, mode: 'insensitive' } },
+      ];
+    const educations = await this.prisma.education.findMany({
+      select: {
+        id: true,
+        name: true,
+        initial: true,
+      },
+      where,
     });
+    return {
+      message: 'Lista de universidades o institutos',
+      success: true,
+      data: educations,
+    };
   }
 
   async findOne(id: string): Promise<Education> {

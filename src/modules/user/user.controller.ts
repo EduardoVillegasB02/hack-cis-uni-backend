@@ -15,7 +15,7 @@ import { CreateUserDto, UpdateUserDto } from './dto';
 export class UserController {
   constructor(private readonly userService: UserService) {}
 
-  @Post()
+  /* @Post()
   create(@Body() dto: CreateUserDto) {
     return this.userService.create(dto);
   }
@@ -41,5 +41,5 @@ export class UserController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.userService.delete(id);
-  }
+  } */
 }

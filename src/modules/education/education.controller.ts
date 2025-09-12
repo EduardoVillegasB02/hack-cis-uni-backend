@@ -7,9 +7,11 @@ import {
   ParseUUIDPipe,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
 import { EducationService } from './education.service';
 import { CreateEducationDto, UpdateEducationDto } from './dto';
+import { SearchDto } from '../../common/dto';
 
 @Controller('education')
 export class EducationController {
@@ -21,11 +23,11 @@ export class EducationController {
   }
 
   @Get()
-  findAll() {
-    return this.educationService.findAll();
+  findAll(@Query() dto: SearchDto) {
+    return this.educationService.findAll(dto);
   }
 
-  @Get(':id')
+  /* @Get(':id')
   findOne(@Param('id', new ParseUUIDPipe()) id: string) {
     return this.educationService.findOne(id);
   }
@@ -41,5 +43,5 @@ export class EducationController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.educationService.delete(id);
-  }
+  } */
 }

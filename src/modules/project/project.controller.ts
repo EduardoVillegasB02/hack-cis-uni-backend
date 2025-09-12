@@ -15,7 +15,7 @@ import { CreateProjectDto, UpdateProjectDto } from './dto';
 export class ProjectController {
   constructor(private readonly projectService: ProjectService) {}
 
-  @Post()
+  /* @Post()
   create(@Body() dto: CreateProjectDto) {
     return this.projectService.create(dto);
   }
@@ -41,5 +41,5 @@ export class ProjectController {
   @Delete(':id')
   delete(@Param('id') id: string) {
     return this.projectService.delete(id);
-  }
+  } */
 }

@@ -1,7 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { Project } from '@prisma/client';
 import { CreateProjectDto, UpdateProjectDto } from './dto';
-import { PrismaService } from 'src/prisma/prisma.service';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class ProjectService {
@@ -42,8 +42,7 @@ export class ProjectService {
       where: { id },
     });
     if (!project) throw new BadRequestException('Project is not found');
-    if (project.deleted_at)
-      throw new BadRequestException('Project is deleted');
+    if (project.deleted_at) throw new BadRequestException('Project is deleted');
     return project;
   }
 }
