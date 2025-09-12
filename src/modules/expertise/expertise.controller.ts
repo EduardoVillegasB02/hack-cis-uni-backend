@@ -13,7 +13,7 @@ import { ExpertiseService } from './expertise.service';
 import { CreateExpertiseDto, UpdateExpertiseDto } from './dto';
 import { SearchDto } from '../../common/dto';
 
-@Controller('Expertise')
+@Controller('expertise')
 export class ExpertiseController {
   constructor(private readonly expertiseService: ExpertiseService) {}
 

@@ -11,7 +11,7 @@ import {
 import { EnrollmentService } from './enrollment.service';
 import { CreateEnrollmentDto, UpdateEnrollmentDto } from './dto';
 
-@Controller('Enrollment')
+@Controller('enrollment')
 export class EnrollmentController {
   constructor(private readonly enrollmentService: EnrollmentService) {}
 
