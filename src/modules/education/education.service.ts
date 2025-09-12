@@ -73,7 +73,12 @@ export class EducationService {
 
   private async verifyEducationName(name: string): Promise<void> {
     const education = await this.prisma.education.findFirst({
-      where: { name: { mode: 'insensitive' } },
+      where: {
+        name: {
+          equals: name,
+          mode: 'insensitive',
+        },
+      },
     });
     if (education)
       throw new BadRequestException(

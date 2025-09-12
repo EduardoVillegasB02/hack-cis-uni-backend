@@ -66,7 +66,12 @@ export class TeamService {
 
   async verifyTeamName(name: string): Promise<void> {
     const team = await this.prisma.team.findFirst({
-      where: { name: { mode: 'insensitive' } },
+      where: {
+        name: {
+          equals: name,
+          mode: 'insensitive',
+        },
+      },
     });
     if (team)
       throw new BadRequestException('Ya existe un equipo con este nombre');
