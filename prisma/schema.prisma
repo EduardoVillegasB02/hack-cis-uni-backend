@@ -44,7 +44,7 @@ model Enrollment {
 
 model Expertise {
   id                    String          @id @default(uuid())
-  name                  String
+  name                  String          @unique
   users                 User[]
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
@@ -69,7 +69,7 @@ model Project {
 
 model Sponsor {
   id                    String          @id @default(uuid())
-  name                  String
+  name                  String          @unique
   email                 String
   contact_name          String
   contact_lastname      String
@@ -82,7 +82,7 @@ model Sponsor {
 
 model Team {
   id                    String          @id @default(uuid())
-  name                  String
+  name                  String          @unique
   project               Project         @relation(fields: [project_id], references: [id])
   project_id            String
   enrollments           Enrollment[]
@@ -96,7 +96,7 @@ model User {
   name                  String
   lastname              String
   dni                   String?
-  email                 String
+  email                 String          @unique
   phone                 String
   linkedin              String
   github                String?

@@ -45,4 +45,14 @@ export class UserService {
     if (user.deleted_at) throw new BadRequestException('User is deleted');
     return user;
   }
+
+  async verifyUserEmail(email: string): Promise<void> {
+    const user = await this.prisma.user.findFirst({
+      where: { email },
+    });
+    if (user)
+      throw new BadRequestException(
+        'El registro ya fue realizado, solo se permite un intento',
+      );
+  }
 }
