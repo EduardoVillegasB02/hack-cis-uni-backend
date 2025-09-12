@@ -17,6 +17,16 @@ export class UserService {
     });
   }
 
+  async countAll(): Promise<any> {
+    const total = await this.prisma.user.count({
+      where: { deleted_at: null },
+    });
+    return {
+      message: 'Total de hackers',
+      total,
+    };
+  }
+
   async findOne(id: string): Promise<User> {
     return await this.getUserById(id);
   }

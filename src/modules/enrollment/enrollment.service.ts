@@ -25,7 +25,9 @@ export class EnrollmentService {
       },
     });
     if (enrollments.length > 3)
-      throw new BadRequestException('Solo se pueden admitir a 4 participantes en un equipo')
+      throw new BadRequestException(
+        'Solo se pueden admitir a 4 participantes en un equipo',
+      );
   }
 
   async findOne(id: string): Promise<Enrollment> {
