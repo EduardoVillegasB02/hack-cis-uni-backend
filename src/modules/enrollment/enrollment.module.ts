@@ -1,9 +1,11 @@
 import { Module } from '@nestjs/common';
 import { EnrollmentService } from './enrollment.service';
 import { EnrollmentController } from './enrollment.controller';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Module({
   controllers: [EnrollmentController],
-  providers: [EnrollmentService],
+  providers: [EnrollmentService, PrismaService],
+  exports: [EnrollmentService],
 })
 export class EnrollmentModule {}

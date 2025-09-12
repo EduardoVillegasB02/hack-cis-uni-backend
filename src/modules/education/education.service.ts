@@ -1,26 +1,67 @@
-import { Injectable } from '@nestjs/common';
-import { CreateEducationDto } from './dto/create-education.dto';
-import { UpdateEducationDto } from './dto/update-education.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Education } from '@prisma/client';
+import { CreateEducationDto, UpdateEducationDto } from './dto';
+import { PrismaService } from '../../prisma/prisma.service';
+import { SearchDto } from '../../common/dto';
 
 @Injectable()
 export class EducationService {
-  create(createEducationDto: CreateEducationDto) {
-    return 'This action adds a new education';
+  constructor(private prisma: PrismaService) {}
+
+  async create(dto: CreateEducationDto): Promise<Education> {
+    return await this.prisma.education.create({ data: dto });
   }
 
-  findAll() {
-    return `This action returns all education`;
+  async findAll(dto: SearchDto): Promise<any> {
+    const { search } = dto;
+    const where: any = { deleted_at: null };
+    if (search)
+      where.OR = [
+        { name: { contains: search, mode: 'insensitive' } },
+        { initial: { contains: search, mode: 'insensitive' } },
+      ];
+    const educations = await this.prisma.education.findMany({
+      select: {
+        id: true,
+        name: true,
+        initial: true,
+      },
+      where,
+    });
+    return {
+      message: 'Lista de universidades o institutos',
+      success: true,
+      data: educations,
+    };
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} education`;
+  async findOne(id: string): Promise<Education> {
+    return await this.getEducationById(id);
   }
 
-  update(id: number, updateEducationDto: UpdateEducationDto) {
-    return `This action updates a #${id} education`;
+  async update(id: string, dto: UpdateEducationDto): Promise<Education> {
+    await this.getEducationById(id);
+    return this.prisma.education.update({
+      data: dto,
+      where: { id },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} education`;
+  async delete(id: string): Promise<Education> {
+    await this.getEducationById(id);
+    return this.prisma.education.update({
+      data: { deleted_at: new Date() },
+      where: { id },
+    });
+  }
+
+  private async getEducationById(id: string): Promise<Education> {
+    const education = await this.prisma.education.findUnique({
+      where: { id },
+    });
+    if (!education) throw new BadRequestException('Education is not found');
+    if (education.deleted_at)
+      throw new BadRequestException('Education is deleted');
+    return education;
   }
 }

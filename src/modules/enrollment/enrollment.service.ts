@@ -1,26 +1,49 @@
-import { Injectable } from '@nestjs/common';
-import { CreateEnrollmentDto } from './dto/create-enrollment.dto';
-import { UpdateEnrollmentDto } from './dto/update-enrollment.dto';
+import { BadRequestException, Injectable } from '@nestjs/common';
+import { Enrollment } from '@prisma/client';
+import { CreateEnrollmentDto, UpdateEnrollmentDto } from './dto';
+import { PrismaService } from '../../prisma/prisma.service';
 
 @Injectable()
 export class EnrollmentService {
-  create(createEnrollmentDto: CreateEnrollmentDto) {
-    return 'This action adds a new enrollment';
+  constructor(private prisma: PrismaService) {}
+
+  async create(dto: CreateEnrollmentDto): Promise<Enrollment> {
+    return await this.prisma.enrollment.create({ data: dto });
   }
 
-  findAll() {
-    return `This action returns all enrollment`;
+  async findAll(): Promise<Enrollment[]> {
+    return await this.prisma.enrollment.findMany({
+      where: { deleted_at: null },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} enrollment`;
+  async findOne(id: string): Promise<Enrollment> {
+    return await this.getEnrollmentById(id);
   }
 
-  update(id: number, updateEnrollmentDto: UpdateEnrollmentDto) {
-    return `This action updates a #${id} enrollment`;
+  async update(id: string, dto: UpdateEnrollmentDto): Promise<Enrollment> {
+    await this.getEnrollmentById(id);
+    return this.prisma.enrollment.update({
+      data: dto,
+      where: { id },
+    });
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} enrollment`;
+  async delete(id: string): Promise<Enrollment> {
+    await this.getEnrollmentById(id);
+    return this.prisma.enrollment.update({
+      data: { deleted_at: new Date() },
+      where: { id },
+    });
+  }
+
+  private async getEnrollmentById(id: string): Promise<Enrollment> {
+    const enrollment = await this.prisma.enrollment.findUnique({
+      where: { id },
+    });
+    if (!enrollment) throw new BadRequestException('Enrollment is not found');
+    if (enrollment.deleted_at)
+      throw new BadRequestException('Enrollment is deleted');
+    return enrollment;
   }
 }
