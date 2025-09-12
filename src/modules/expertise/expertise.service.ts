@@ -13,7 +13,7 @@ export class ExpertiseService {
     return {
       message: 'Creación exitosa',
       success: true,
-    }
+    };
   }
 
   async findAll(dto: SearchDto): Promise<any> {
@@ -62,9 +62,10 @@ export class ExpertiseService {
     const expertise = await this.prisma.expertise.findUnique({
       where: { id },
     });
-    if (!expertise) throw new BadRequestException('Expertise is not found');
+    if (!expertise)
+      throw new BadRequestException('La habilidad no fue encontrada');
     if (expertise.deleted_at)
-      throw new BadRequestException('Expertise is deleted');
+      throw new BadRequestException('Esta habilidad ha sido eliminada');
     return expertise;
   }
 }

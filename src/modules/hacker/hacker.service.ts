@@ -24,7 +24,12 @@ export class HackerService {
       dto;
     await this.educationService.findOne(res.education_id);
     await this.expertiseService.findOne(res.expertise_id);
-    if (team_id) await this.teamService.findOne(team_id);
+    await this.userService.verifyUserEmail(res.email);
+    if (team_id) {
+      await this.teamService.findOne(team_id);
+      await this.enrollmentService.verifyTeams(team_id);
+    }
+    if (team_name) await this.teamService.verifyTeamName(team_name);
     const user: User = await this.userService.create(res);
     if (team_create) {
       const project: Project = await this.projectService.create({
@@ -38,10 +43,11 @@ export class HackerService {
         team_id: team.id,
         user_id: user.id,
       });
-    } else await this.enrollmentService.create({
-      team_id: team_id,
-      user_id: user.id,
-    });
+    } else
+      await this.enrollmentService.create({
+        team_id: team_id,
+        user_id: user.id,
+      });
     return {
       message: 'Registro exitoso',
       success: true,

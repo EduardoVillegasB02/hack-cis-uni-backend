@@ -9,6 +9,7 @@ export class EducationService {
   constructor(private prisma: PrismaService) {}
 
   async create(dto: CreateEducationDto): Promise<Education> {
+    await this.verifyEducationName(dto.name);
     return await this.prisma.education.create({ data: dto });
   }
 
@@ -59,9 +60,24 @@ export class EducationService {
     const education = await this.prisma.education.findUnique({
       where: { id },
     });
-    if (!education) throw new BadRequestException('Education is not found');
+    if (!education)
+      throw new BadRequestException(
+        'La universidad o instituto no se encuentra',
+      );
     if (education.deleted_at)
-      throw new BadRequestException('Education is deleted');
+      throw new BadRequestException(
+        'Esta universidad o instituto ha sido eliminado',
+      );
     return education;
+  }
+
+  private async verifyEducationName(name: string): Promise<void> {
+    const education = await this.prisma.education.findFirst({
+      where: { name: { mode: 'insensitive' } },
+    });
+    if (education)
+      throw new BadRequestException(
+        'La universidad o instituto ya ha sido creado',
+      );
   }
 }

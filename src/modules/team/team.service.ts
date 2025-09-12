@@ -58,8 +58,17 @@ export class TeamService {
     const team = await this.prisma.team.findUnique({
       where: { id },
     });
-    if (!team) throw new BadRequestException('Team is not found');
-    if (team.deleted_at) throw new BadRequestException('Team is deleted');
+    if (!team) throw new BadRequestException('El equipo no existe');
+    if (team.deleted_at)
+      throw new BadRequestException('Este equipo ha sido eliminado');
     return team;
+  }
+
+  async verifyTeamName(name: string): Promise<void> {
+    const team = await this.prisma.team.findFirst({
+      where: { name: { mode: 'insensitive' } },
+    });
+    if (team)
+      throw new BadRequestException('Ya existe un equipo con este nombre');
   }
 }

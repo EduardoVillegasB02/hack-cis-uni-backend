@@ -17,6 +17,17 @@ export class EnrollmentService {
     });
   }
 
+  async verifyTeams(id: string): Promise<void> {
+    const enrollments = await this.prisma.enrollment.findMany({
+      where: {
+        team_id: id,
+        deleted_at: null,
+      },
+    });
+    if (enrollments.length > 3)
+      throw new BadRequestException('Solo se pueden admitir a 4 participantes en un equipo')
+  }
+
   async findOne(id: string): Promise<Enrollment> {
     return await this.getEnrollmentById(id);
   }
