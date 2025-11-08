@@ -7,7 +7,7 @@ export class CreateProjectDto {
 
   @IsString()
   @IsNotEmpty()
-  description_initial: string;
+  description_initial?: string;
 
   @IsString()
   @IsOptional()
@@ -32,4 +32,8 @@ export class CreateProjectDto {
   @IsString()
   @IsOptional()
   documentation?: string;
+
+  @IsString()
+  @IsOptional()
+  team?: string;
 }
