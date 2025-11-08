@@ -54,13 +54,14 @@ model Expertise {
 model Project {
   id                    String          @id @default(uuid())
   name                  String?
-  description_initial   String
+  description_initial   String?
   description_final     String?
   github                String?
   video_pitch           String?
   presentation          String?
   demo                  String?
   documentation         String?
+  team                  String?
   teams                 Team[]
   created_at            DateTime        @default(now())
   updated_at            DateTime        @updatedAt
